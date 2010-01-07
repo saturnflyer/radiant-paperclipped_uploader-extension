@@ -24,9 +24,12 @@ class PaperclippedUploaderExtension < Radiant::Extension
     Asset.send :include, UploadableAsset
     Admin::AssetsController.send :include, AssetsControllerExtension
 
-    if admin.tabs['Assets'] && admin.tabs['Assets'].respond_to?(:add_link)
-      admin.tabs['Assets'].add_link('asset list', '/admin/assets')
-      admin.tabs['Assets'].add_link('uploader', '/admin/assets/uploader')
+    if self.respond_to?(:tab)
+      tab 'Assets' do
+        add_item 'Uploader', '/admin/asset_uploader'
+      end
+    else
+      admin.tabs.add 'Uploader', '/admin/asset_uploader', :after => 'Assets'
     end
     
   end
